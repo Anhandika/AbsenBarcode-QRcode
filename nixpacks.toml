@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["php83", "php83Packages.composer", "nodejs_20"]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader --no-interaction", "npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "bash -c 'php artisan storage:link || true; php artisan migrate --force --no-interaction; php artisan db:seed --force --no-interaction || true; if [ ! -f .env ]; then cp .env.example .env; fi; if [ -z \"$APP_KEY\" ]; then php artisan key:generate --force; fi; mkdir -p storage/framework/sessions; php artisan config:clear; php artisan config:cache; php artisan route:clear; php artisan route:cache; php artisan view:clear; php artisan view:cache; (while true; do php artisan schedule:run --no-interaction 2>/dev/null || true; sleep 60; done) & php artisan serve --host=0.0.0.0 --port=${PORT:-8000}'"
+
+[variables]
+NIXPACKS_PHP_VERSION = "8.3"
+NIXPACKS_NODE_VERSION = "20"

@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css');
+@import "tailwindcss";
+
+@source "../**/*.blade.php";
+@source "../**/*.js";
+
+@theme inline {
+    --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+    --color-school-canvas: #f2f5fa;
+    --color-school-navy: #111a31;
+    --color-school-ink: #172033;
+    --color-school-muted: #68748b;
+    --color-school-soft: #8a95a8;
+    --color-school-line: #e3e8f0;
+    --color-school-purple: #623ed8;
+    --color-school-blue: #2c68f5;
+    --color-school-action: #315fea;
+    --color-school-success: #167a67;
+    --color-school-warning: #a86d17;
+    --color-school-danger: #c54551;
+    --radius-school-control: 7px;
+    --radius-school-card: 10px;
+    --radius-school-result: 12px;
+    --shadow-school-section: 0 18px 45px rgba(17, 26, 49, 0.08);
+    --shadow-school-plinth: 0 12px 25px rgba(17, 26, 49, 0.12);
+}
+
+@layer base {
+    :root {
+        color-scheme: light;
+        font-family: var(--font-body);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background: var(--color-school-canvas);
+        color: var(--color-school-ink);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+        opacity: 0.58;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .school-display {
+        font-family: var(--font-display);
+        letter-spacing: -0.04em;
+    }
+
+    .school-card {
+        border: 1px solid var(--color-school-line);
+        border-radius: var(--radius-school-card);
+        background: #fff;
+    }
+
+    .school-panel {
+        border: 1px solid var(--color-school-line);
+        border-radius: var(--radius-school-card);
+        background: #fff;
+        box-shadow: var(--shadow-school-section);
+    }
+
+    .school-button {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: var(--radius-school-control);
+        padding: 0.6rem 1rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        line-height: 1;
+        transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .school-button:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+
+    .school-button-primary {
+        background: var(--color-school-action);
+        color: #fff;
+        box-shadow: 0 5px 12px rgba(49, 95, 234, 0.16);
+    }
+
+    .school-button-primary:hover:not(:disabled) {
+        background: #214fd5;
+    }
+
+    .school-button-secondary {
+        border: 1px solid var(--color-school-line);
+        background: #fff;
+        color: var(--color-school-muted);
+    }
+
+    .school-button-secondary:hover:not(:disabled) {
+        border-color: var(--color-school-ink);
+        color: var(--color-school-ink);
+    }
+
+    .school-button-ghost {
+        color: var(--color-school-muted);
+    }
+
+    .school-button-ghost:hover:not(:disabled) {
+        background: var(--color-school-canvas);
+        color: var(--color-school-ink);
+    }
+
+    .school-focus:focus-visible,
+    .school-button:focus-visible,
+    a:focus-visible,
+    input:focus-visible {
+        outline: 2px solid var(--color-school-blue);
+        outline-offset: 3px;
+    }
+
+    .school-sidebar {
+        background: var(--color-school-navy);
+        color: #fff;
+    }
+
+    .school-offset-panel {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .school-offset-panel::after {
+        position: absolute;
+        z-index: -1;
+        inset: 7px -7px -7px 7px;
+        border-radius: var(--radius-school-card);
+        background: linear-gradient(135deg, var(--color-school-purple), var(--color-school-blue));
+        content: '';
+    }
+
+    .qr-plinth {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .qr-plinth::before,
+    .qr-plinth::after {
+        position: absolute;
+        z-index: -1;
+        border-radius: 14px;
+        content: '';
+    }
+
+    .qr-plinth::before {
+        inset: 14px -14px -14px 14px;
+        background: #1e387b;
+    }
+
+    .qr-plinth::after {
+        inset: 7px -7px -7px 7px;
+        background: #6e72df;
+    }
+
+    .countdown-ring {
+        --progress: 100%;
+        background: conic-gradient(var(--color-school-blue) var(--progress), #e5eaf2 0);
+    }
+
+    .countdown-ring::after {
+        position: absolute;
+        inset: 7px;
+        border-radius: 9999px;
+        background: #fff;
+        content: '';
+    }
+
+    .scan-corner {
+        position: absolute;
+        width: 31px;
+        height: 31px;
+        border-color: #fff;
+    }
+
+    .scan-corner-tl { top: 24px; left: 24px; border-top: 3px solid; border-left: 3px solid; }
+    .scan-corner-tr { top: 24px; right: 24px; border-top: 3px solid; border-right: 3px solid; }
+    .scan-corner-bl { bottom: 24px; left: 24px; border-bottom: 3px solid; border-left: 3px solid; }
+    .scan-corner-br { right: 24px; bottom: 24px; border-right: 3px solid; border-bottom: 3px solid; }
+
+    .scanner-video {
+        min-height: 280px;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 30% 25%, rgba(100, 128, 177, 0.3), transparent 30%),
+            linear-gradient(140deg, #284466 0%, #152844 45%, #0d1d36 100%);
+    }
+
+    .scanner-video::after {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(125deg, transparent 0 48%, rgba(255, 255, 255, 0.05) 48.5% 49.5%, transparent 50%);
+        content: '';
+        pointer-events: none;
+    }
+
+    .result-panel {
+        border-radius: var(--radius-school-result);
+        padding: 1.25rem;
+    }
+
+    .result-panel-success { border: 1px solid #cfe8e1; background: #f4fbf8; }
+    .result-panel-expired { border: 1px solid #ecdcbf; background: #fffaf0; }
+    .result-panel-outside { border: 1px solid #f0d2d5; background: #fff6f7; }
+    .result-panel-duplicate { border: 1px solid #d9e0ec; background: #f7f9fc; }
+
+    .result-tab[aria-selected='true'] {
+        border-color: var(--color-school-ink);
+        background: var(--color-school-ink);
+        color: #fff;
+    }
+
+    .login-grid {
+        background:
+            radial-gradient(circle at 12% 18%, rgba(98, 62, 216, 0.13), transparent 25%),
+            radial-gradient(circle at 88% 78%, rgba(44, 104, 245, 0.11), transparent 25%),
+            var(--color-school-canvas);
+    }
+}
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes tilt3d { 0%,100%{transform:perspective(600px) rotateY(-8deg) rotateX(6deg)} 50%{transform:perspective(600px) rotateY(-2deg) rotateX(2deg)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+@media (prefers-reduced-motion: reduce) {
+    @layer base {
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            transition-duration: 1ms !important;
+            animation-duration: 1ms !important;
+        }
+    }
+}
