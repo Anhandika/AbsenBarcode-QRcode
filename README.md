@@ -36,7 +36,7 @@ Desain antarmuka menggunakan konsep **Digital Plinth**: sidebar gelap, kartu sta
 
 ## Persiapan PostgreSQL
 
-Buat database dan user PostgreSQL sebelum menjalankan migrasi:
+Lokal:
 
 ```sql
 CREATE USER absen_app WITH PASSWORD 'ganti-password-kuat';
@@ -52,6 +52,7 @@ DB_PORT=5432
 DB_DATABASE=absen_barcode
 DB_USERNAME=absen_app
 DB_PASSWORD=ganti-password-kuat
+DB_SSLMODE=prefer
 ```
 
 Pastikan ekstensi PHP `pdo_pgsql` aktif:
@@ -79,31 +80,48 @@ npm run build
 php artisan optimize
 ```
 
-## Deploy ke Railway
+## Database Supabase
 
-Railway dapat menjalankan Laravel dan PostgreSQL tanpa cPanel. Hubungkan repository GitHub ini ke project Railway, lalu tambahkan PostgreSQL sebagai service. File `railway.toml` akan memasang dependency, membuild Vite, menjalankan migrasi, dan membuka Laravel pada port Railway.
+Supabase dipakai sebagai PostgreSQL managed (pengganti Railway Postgres).
+Supabase **tidak** meng-host aplikasi Laravel — host Laravel tetap di VPS /
+platform lain (mis. Render, Fly.io, VPS), database-nya saja menunjuk ke Supabase.
 
-Set Variables berikut di service Laravel Railway:
+1. Buat project di https://supabase.com/dashboard → **Project Settings → Database**.
+2. Ambil **Direct connection** (port `5432`, untuk `migrate --seed`) dan
+   **Pooler / Transaction mode** (port `6543`, untuk aplikasi produksi).
+3. Isi `.env` lokal untuk migrasi awal (Direct):
+
+```dotenv
+DB_CONNECTION=pgsql
+DB_HOST=db.xxxxx.supabase.co
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=[password-database-supabase]
+DB_SSLMODE=require
+```
+
+4. Jalankan:
+
+```bash
+php artisan migrate --seed
+```
+
+5. Untuk produksi (hosting Laravel), pakai Pooler agar hemat koneksi:
 
 ```dotenv
 APP_ENV=production
 APP_DEBUG=false
-APP_KEY=<hasilkan dengan php artisan key:generate --show>
-APP_URL=https://<domain-railway-atau-domain-custom>
-DB_CONNECTION=pgsql
-DB_HOST=${{Postgres.PGHOST}}
-DB_PORT=${{Postgres.PGPORT}}
-DB_DATABASE=${{Postgres.PGDATABASE}}
-DB_USERNAME=${{Postgres.PGUSER}}
-DB_PASSWORD=${{Postgres.PGPASSWORD}}
-FIREBASE_ENABLED=false
-FIREBASE_STORAGE_ENABLED=true
-FIREBASE_PROJECT_ID=anproject-8968f
-FIREBASE_STORAGE_DEFAULT_BUCKET=anproject-8968f.firebasestorage.app
-FIREBASE_CREDENTIALS=/app/storage/app/firebase/service-account.json
+APP_URL=https://<domain-laravel>
+DB_URL=postgresql://postgres.[REF]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true
+DB_SSLMODE=require
+SESSION_DRIVER=database
+TRUSTED_PROXIES=*
 ```
 
-Service account Firebase harus disediakan sebagai Secret File Railway pada path `/app/storage/app/firebase/service-account.json`. Jangan commit file JSON tersebut ke repository. Setelah deploy, gunakan domain Railway sebagai backend Laravel dan tambahkan domain itu di Firebase Console → Authentication → Settings → Authorized domains.
+Catatan: dapatkan host pooler yang tepat dari Dashboard Supabase
+(berbeda tiap region). `config/database.php` membaca `DATABASE_URL`/`DB_URL`
+dan `DB_SSLMODE`, jadi `sslmode=require` wajib untuk Supabase.
 
 ## Akun demo
 
